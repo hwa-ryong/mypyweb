@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>투표 결과</title>
+    <link rel="stylesheet" href="{% static 'poll/css/style.css' %}">
+</head>
+<body>
+<div id="container">
+    <section id="result">
+        <h1>투표 결과</h1>
+        <h3>{{ question.question_text }}</h3>
+        <ul>
+          {% for choice in question.choice_set.all %}
+          <li>{{ choice.choice_text }} -- {{ choice.votes }}</li>
+          {% endfor %}
+        </ul>
+    </section>
+</div>
+</body>
+</html>
