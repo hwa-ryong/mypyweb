@@ -17,9 +17,11 @@
             <!-- 글쓴이와 로그인한 사람이 일치하면 -->
             {% if question.author == request.user %}
             <div>
+                <a href="{% url 'board:question_modify' question.id %}"
+                   class="btn btn-sm btn-outline-secondary">수정</a>
                 <a href="#"
                    data-uri="{% url 'board:question_delete' question.id %}"
-                   class="delete btn btn-sm btn-online-secondary">삭제</a>
+                   class="delete btn btn-sm btn-outline-secondary">삭제</a>
             </div>
             {% endif %}
         </div>
@@ -36,16 +38,15 @@
                 </div>
                 <div class="d-flex justify-content-end">
                 <div class="badge bg-dark text-start">
-                    <div class="mb-2">{{ question.author }}</div>
-                    <div>{{ question.create_date }}</div>
+                    <div class="mb-2">{{ answer.author }}</div>
+                    <div>{{ answer.create_date }}</div>
                 </div>
             </div>
-                <div class="d-flex justify-content-end">
-                    <div class="badge badge-light p-2">
-                        {{ answer.create_date }}
-                    </div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-dark text-start">
+                    <div class="mb-2">{{ answer.author }}</div>
+                    <div>{{ answer.create_date }}</div>
                 </div>
-            </div>
         </div>
         {% endfor %}
          {% if form.errors %}

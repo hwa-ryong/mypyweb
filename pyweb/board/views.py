@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from board.models import Question
+from board.models import Question, Answer
 from board.forms import QuestionForm, AnswerForm
 
 
@@ -59,6 +59,25 @@ def answer_create(request, question_id):
     context = {'question': question, 'form': form}
     return render(request, 'board/detail.html', context)
 
+# 질문 수정
+@login_required(login_url='common:login')
+def question_modify(request, question_id):
+    # 수정을 위해서 질문 1개 가져옴
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST":
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            question = form.save(commit=False)  #커밋 아직 안됨
+            question.modify_date = timezone.now()  #수정일
+            question.author = request.user       # 글쓴이
+            question.save()
+            return redirect('board:detail', question_id=question_id)
+    else:
+        form = QuestionForm(instance=question)  # 데이터가 이미 있는 폼
+    context = {'form': form}
+    return render(request, 'board/question_form.html', context)
+
+
 # 질문 삭제
 @login_required(login_url='common:login')
 def question_delete(request, question_id):
@@ -66,3 +85,10 @@ def question_delete(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
     return redirect('board:question_list')
+
+# 답변 삭제
+@login_required(login_url='common:login')
+def answer_delete(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+    answer.delete()
+    return redirect('board:detail', question_id=answer.question.id)
