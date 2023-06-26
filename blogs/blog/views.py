@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
-from blog.forms import PostForm
-from blog.models import Post
+from blog import PostForm
+from blog import Post
 
 
 def index(request):
