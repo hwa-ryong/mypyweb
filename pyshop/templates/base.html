@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'blog/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <script src="{% static 'blog/js/bootstrap.js' %}"></script>
+    <script src="https://kit.fontawesome.com/0dcc7cd03c.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
 {% include 'navbar.html' %}
