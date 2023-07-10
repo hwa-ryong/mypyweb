@@ -1,12 +1,45 @@
 {% extends 'base.html' %}
+{% block title %}글쓰기 폼입니다.
+{% endblock %}
 {% block content %}
-<div class="container my-3">
-    <h1>글쓰기</h1>
-    <form action="" method="post"
-          enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">저장하기</button>
-    </form>
-</div>
+<h3>글쓰기</h3>
+<form action="" method="post"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include 'form_errors.html' %}
+    <!--{{ form.as_p }}-->
+    <div class="form-group my-2">
+          <label for="title" class="mb-1">제목</label>
+          <input type="text" id="title" name="title"
+                 class="form-control my-2"
+                 value="{{ form.title.value|default_if_none:'' }}">
+    </div>
+    <div class="form-group my-2">
+          <label for="content" class="mb-1">내용</label>
+          <textarea name="content" id="content" rows="7"
+                    class="form-control my-2">{{ form.content.value|default_if_none:'' }}</textarea>
+    </div>
+    <div class="form-group my-2">
+          <label for="photo" class="mb-1">사진</label>
+          <input type="file" id="photo" name="photo"
+                 class="form-control my-2"
+                 value="{{ form.photo.value|default_if_none:'' }}">
+    </div>
+    <div class="form-group my-2">
+          <label for="file" class="mb-1">파일</label>
+          <input type="file" id="file" name="file"
+                 class="form-control my-2"
+                 value="{{ form.file.value|default_if_none:'' }}">
+    </div>
+    <div class="form-group my-2">
+          <label for="category" class="mb-1">분류</label>
+          <select name="category" id="category" class="form-select">
+              <!-- value값은 category의 id를 사용 -->
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+          </select>
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">저장하기</button>
+</form>
 {% endblock %}

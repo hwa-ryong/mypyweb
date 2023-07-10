@@ -1,14 +1,81 @@
 {% extends 'base.html' %}
+{% block title %}포스트 상세 내용입니다.
+{% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Blog 홈</h1>
-        <h3>{{ post.title }}</h3>
-        <h5 style="white-space: pre-line; line-height: 1.5">
-            {{ post.content }}
-        </h5>
-        <p>(작성일: {{ post.pub_date }})</p>
-        {% if post.photo %}
+    {% if post.category %}
+        <h6 class="text-end">[{{ post.category }}]</h6>
+    {% endif %}
+    <h3>{{ post.title }}</h3>
+    <h5 style="white-space: pre-line; line-height: 1.5">
+        {{ post.content }}
+    </h5>
+    <p>글쓴이: {{ post.author }} (작성일: {{ post.pub_date }})</p>
+    <!-- 이미지 파일이 있으면 보이기 -->
+    {% if post.photo %}
         <img src="{{ post.photo.url }}">
-        {% endif %}
-</div>
+    {% endif %}
+    <!-- 파일이 있으면 보이기 -->
+    {% if post.file %}
+    <p>
+        <a href="{{ post.file.url }}" class="btn btn-outline-dark">
+            Download:
+            {% if post.get_file_ext == 'csv' %}
+                <i class="fa-solid fa-file-csv"></i>
+            {% elif post.get_file_ext == 'xlsx' or post.get_file_ext == 'xls' %}
+                <i class="fa-solid fa-file-excel"></i>
+            {% else %}
+                <i class="fa-solid fa-file"></i>
+            {% endif %}
+        {{ post.get_file_name }}</a>
+    </p>
+    {% endif %}
+
+    <!-- 댓글 영역 -->
+    <div class="mt-3">
+        <h5>댓글</h5>
+        {% for comment in post.comment_set.all %}
+        <div class="comment text-muted">
+            <span>{{ comment.content|linebreaks }}</span>
+            <span>{{ comment.author }}, {{ comment.pub_date }}
+                <!-- 수정일 표시 -->
+                {% if comment.modify_date %}
+                    (수정일: {{ comment.modify_date }})
+                {% endif %}
+            </span>
+
+
+
+            <!-- 댓글 수정, 삭제 -->
+            {% if comment.author == request.user %}
+            <a href="{% url 'blog:comment_modify' comment.id %}">수정</a>
+                <a href="#" class="delete"
+                   data-uri="{% url 'blog:comment_delete' comment.id %}">삭제</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+        <form action="{% url 'blog:comment_create' post.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea name="content" rows="3"
+                          placeholder="댓글을 남겨보세요"
+                          class="form-control my-3"></textarea>
+                <button type="submit"
+                        class="btn btn-sm btn-outline-success">등록</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function){
+        //삭제 처리
+        $(".delete").click(function(){
+            if(confirm('정말로 삭제하시겠습니까?')){
+                location.href=$(this).data('uri');
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,9 @@
+@charset 'utf-8';
+
+a{text-decoration: none;}
+.comment{
+    border-top: 1px dotted #ccc;
+    padding: 10px 5px;
+    font-size: 0.9em;
+}
+
